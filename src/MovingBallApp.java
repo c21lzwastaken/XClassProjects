@@ -2,6 +2,7 @@ import org.opensourcephysics.controls.AbstractSimulation;
 import org.opensourcephysics.controls.SimulationControl;
 import org.opensourcephysics.display.Circle;
 import org.opensourcephysics.frames.PlotFrame;
+import java.lang.Math;
 
 /***
  * MovingBallApp is an extension of AbstractSimulation (an abstract class).
@@ -29,6 +30,7 @@ public class MovingBallApp extends AbstractSimulation {
     @Override
     public void reset() {
         control.setValue("Starting Y position", 100);
+        control.setValue("Starting X position", 100);
     }
 
     /**
@@ -41,13 +43,15 @@ public class MovingBallApp extends AbstractSimulation {
         // Get information from the control panel.
         double startingY = control.getDouble("Starting Y position");
         circle.setY(startingY);
+        double startingX = control.getDouble("Starting X position");
+        circle.setX(startingX);
 
         // Instead of appending x, y coordinates to plot frame,
         //    add the Circle which maintains its own x, y.
         plotFrame.addDrawable(circle);
 
         // Configure plot frame
-        plotFrame.setPreferredMinMax(-25, 25, 0, startingY); // Scale of graph.
+        plotFrame.setPreferredMinMax(-Math.abs(startingX), Math.abs(startingX), -Math.abs(startingY), Math.abs(startingY)); // Scale of graph.
         plotFrame.setDefaultCloseOperation(3); // Make it so x'ing out of the graph stops the program.
         plotFrame.setVisible(true); // Required to show plot frame.
     }
@@ -59,6 +63,7 @@ public class MovingBallApp extends AbstractSimulation {
     public void doStep() {
         // Change y. (It will re-draw itself.)
         circle.setY(circle.getY() - 1);
+        circle.setX(circle.getX() + 2);
 
         totalTime++;
     }
