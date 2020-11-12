@@ -17,6 +17,7 @@ public class RiemannApp {
         Polynomial fx = new Polynomial(new double[]{0, 0, 1});
 
         RightHandRule rh = new RightHandRule();
+        LeftHandRule lh = new LeftHandRule();
 
         PlotFrame pf = new PlotFrame("x", "y", "Riemann App");
         pf.setSize(800, 800);
@@ -24,8 +25,9 @@ public class RiemannApp {
         pf.setDefaultCloseOperation(3);
         pf.setVisible(true);
 
-        rh.accumulatePlot(pf, fx, 0, 10, 20);
+        //rh.accumulatePlot(pf, fx, 0, 10, 20);
         rh.sumplot(pf, fx, 0, 10, 20);
+        lh.sumplot(pf, fx, 0, 10, 20);
         rh.plotgraph(pf, fx, 0, 10, 20);
         //rh.accumulateIntegralPlot(pf, vx, 0, 10, 20);
     }

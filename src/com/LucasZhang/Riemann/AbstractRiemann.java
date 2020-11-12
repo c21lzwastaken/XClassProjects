@@ -48,7 +48,7 @@ public abstract class AbstractRiemann {
             for (int i = 0; i < subintervals; i++) {
                 DrawableShape rect = DrawableShape.createRectangle(xLeft + (i + .5) * calculateDeltax(xLeft, xRight, subintervals), .5 * sum(poly, xLeft, xLeft + (i + 1) * calculateDeltax(xLeft, xRight, subintervals), i+1), calculateDeltax(xLeft, xRight, subintervals), sum(poly, xLeft, xLeft + (i + 1) * calculateDeltax(xLeft, xRight, subintervals), i+1));
 
-                Color color = new Color(53, 146, 196, 125);
+                Color color = new Color(53, 146, 196, 150);
                 rect.color = color;
                 rect.edgeColor = Color.BLACK;
 
@@ -56,11 +56,14 @@ public abstract class AbstractRiemann {
             }
         }
     }
-    /*
+
     public void accumulateIntegralPlot(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals){
+        System.out.println(poly.getDegree());
         if (subintervals > 0 && xRight > xLeft) {
-            double[] newcoef = new double[poly.getDegree()+1];
-            for (int i = 0; i <= poly.getDegree()+1; i++) {
+            double[] newcoef = new double[poly.getDegree()+2];
+            System.out.println(newcoef.length);
+            for (int i = 0; i < poly.getDegree()+2; i++) {
+                System.out.println(poly.getCoefficientArray()[1]);
                 newcoef[i+1] = (1/(i+1))*poly.getCoefficientArray()[i];
             }
             Polynomial newpoly = new Polynomial(newcoef);
@@ -72,8 +75,6 @@ public abstract class AbstractRiemann {
             }
         }
     }
-
-     */
 
     public void plotgraph(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals){
         if (subintervals > 0 && xRight > xLeft) {
