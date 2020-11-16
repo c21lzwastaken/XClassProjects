@@ -21,7 +21,7 @@ public class RightHandRule extends AbstractRiemann{
 
     public void slicePlot(PlotFrame pframe, Polynomial poly, double xLeft, double xRight) {
         if (xRight > xLeft){
-            DrawableShape rect = DrawableShape.createRectangle(xLeft+(xRight-xLeft)/2,poly.evaluateWith(xRight)/2,xRight-xLeft,poly.evaluateWith(xRight));
+            DrawableShape rect = DrawableShape.createRectangle(xLeft+(xRight-xLeft)/2,poly.evaluateWith(xRight)/2,xRight-xLeft, Math.abs(poly.evaluateWith(xRight)));
 
             Color color = new Color(73, 156, 84, 150);
             rect.color = color;
