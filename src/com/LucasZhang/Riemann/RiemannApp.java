@@ -19,6 +19,7 @@ public class RiemannApp {
 
         RightHandRule rh = new RightHandRule();
         LeftHandRule lh = new LeftHandRule();
+        PlotRiemann pr = new PlotRiemann();
 
         PlotFrame pf = new PlotFrame("x", "y", "Riemann App");
         pf.setSize(800, 800);
@@ -34,6 +35,7 @@ public class RiemannApp {
         //rh.sumplot(pf, hx, -10, 10, 40);
         //rh.accumulateIntegralPlot(pf, vx, 0, 10, 20);
 
-        rh.totalplot(pf, hx, -10, 10, 40, 1);
+        //pr.totalplot2(pf, hx, -10, 10, 40, 1);
+        pr.totalplot2(pf, hx, -10, 10, 40, 3);
     }
 }

@@ -30,4 +30,16 @@ public class RightHandRule extends AbstractRiemann{
             pframe.addDrawable(rect);
         }
     }
+
+    public void totalplot(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals){
+
+        RightHandRule rh = new RightHandRule();
+        rh.plotgraph(pframe, poly, xLeft, xRight, subintervals);
+        rh.sumplot(pframe, poly, xLeft, xRight, subintervals);
+        rh.accumulatePlot(pframe, poly, xLeft, xRight, subintervals);
+    }
+
+    public void totalplot2(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals, int type){
+        System.out.println("Invalid Usage");
+    }
 }

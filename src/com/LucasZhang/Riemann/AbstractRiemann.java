@@ -90,33 +90,7 @@ public abstract class AbstractRiemann {
         }
     }
 
-    public void totalplot(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals, int type){
+    public abstract void totalplot(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals);
 
-        /*
-        PlotFrame pf = new PlotFrame("x", "y", "Riemann App");
-        pf.setSize(800, 800);
-        pf.setPreferredMinMax(-10, 10, -100, 100);
-        pf.setDefaultCloseOperation(3);
-        pf.setVisible(true);
-         */
-
-        if (type == 1){
-            RightHandRule rh = new RightHandRule();
-            rh.plotgraph(pframe, poly, xLeft, xRight, subintervals);
-            rh.sumplot(pframe, poly, xLeft, xRight, subintervals);
-            rh.accumulatePlot(pframe, poly, xLeft, xRight, subintervals);
-        }
-        if (type == 2){
-            LeftHandRule lh = new LeftHandRule();
-            lh.plotgraph(pframe, poly, xLeft, xRight, subintervals);
-            lh.sumplot(pframe, poly, xLeft, xRight, subintervals);
-            lh.accumulatePlot(pframe, poly, xLeft, xRight, subintervals);
-        }
-        if (type == 3){
-
-        }
-        else {
-            System.out.println("Invalid Input");
-        }
-    }
+    public abstract void totalplot2(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals, int type);
 }

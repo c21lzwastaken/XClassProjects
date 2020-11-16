@@ -30,4 +30,16 @@ public class LeftHandRule extends AbstractRiemann{
             pframe.addDrawable(rect);
         }
     }
+
+    public void totalplot(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals){
+
+        LeftHandRule lh = new LeftHandRule();
+        lh.plotgraph(pframe, poly, xLeft, xRight, subintervals);
+        lh.sumplot(pframe, poly, xLeft, xRight, subintervals);
+        lh.accumulatePlot(pframe, poly, xLeft, xRight, subintervals);
+    }
+
+    public void totalplot2(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals, int type){
+        System.out.println("Invalid Usage");
+    }
 }
