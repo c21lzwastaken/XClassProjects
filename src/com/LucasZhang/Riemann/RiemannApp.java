@@ -2,13 +2,7 @@ package com.LucasZhang.Riemann;
 
 import org.dalton.polyfun.Polynomial;
 
-import org.opensourcephysics.display.DrawableShape;
-import org.opensourcephysics.display.Trail;
 import org.opensourcephysics.frames.PlotFrame;
-
-import java.awt.Color;
-
-import java.lang.Math;
 
 public class RiemannApp {
 
@@ -33,9 +27,9 @@ public class RiemannApp {
         //rh.plotgraph(pf, fx, 0, 10, 20);
         //rh.plotgraph(pf, hx, -10, 10, 40);
         //rh.sumplot(pf, hx, -10, 10, 40);
-        //rh.accumulateIntegralPlot(pf, vx, 0, 10, 20);
+        pr.totalplot2(pf, hx, -10, 10, 20, 1);
 
         //pr.totalplot2(pf, hx, -10, 10, 40, 1);
-        pr.totalplot2(pf, hx, -10, 10, 40, 3);
+        //pr.totalplot2(pf, fx, 0, 10, 120, 1);
     }
 }
