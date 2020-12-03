@@ -173,5 +173,5 @@ public abstract class AbstractRiemann {
      * @param subintervals Number of subintervals
      * @param type The type of rule
      */
-    public abstract void totalplot2(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals, int type);
+    public abstract void totalplot2(Polynomial poly, double xLeft, double xRight, int subintervals, int type);
 }

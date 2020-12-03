@@ -27,7 +27,7 @@ public class RiemannApp {
         //rh.plotgraph(pf, fx, 0, 10, 20);
         //rh.plotgraph(pf, hx, -10, 10, 40);
         //rh.sumplot(pf, hx, -10, 10, 40);
-        pr.totalplot2(pf, hx, -10, 10, 20, 1);
+        pr.totalplot2(hx, -10, 10, 20, 1);
 
         //pr.totalplot2(pf, hx, -10, 10, 40, 1);
         //pr.totalplot2(pf, fx, 0, 10, 120, 1);

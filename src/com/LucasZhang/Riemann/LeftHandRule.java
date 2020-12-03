@@ -58,12 +58,12 @@ public class LeftHandRule extends AbstractRiemann{
         lh.sumplot(pframe, poly, xLeft, xRight, subintervals);
         lh.accumulatePlot(pframe, poly, xLeft, xRight, subintervals);
         lh.accumulateIntegralPlot(pframe, poly, xLeft, xRight, subintervals);
-        lh.plotgraph(pframe, poly, xLeft, xRight, subintervals);
+        lh.plotgraph(pframe, poly, xLeft, xRight, 5*subintervals);
 
         System.out.println("The area by Left Hand Rule is: " + lh.sum(poly, xLeft, xRight, subintervals));
     }
 
-    public void totalplot2(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals, int type){
+    public void totalplot2(Polynomial poly, double xLeft, double xRight, int subintervals, int type){
         System.out.println("Invalid Usage");
     }
 }

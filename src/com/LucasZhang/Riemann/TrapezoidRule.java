@@ -33,26 +33,29 @@ public class TrapezoidRule extends AbstractRiemann{
      */
     public void slicePlot(PlotFrame pframe, Polynomial poly, double xLeft, double xRight) {
         if (xRight > xLeft){
+            /*
             Trail trail1 = new Trail();
 
-            Color color = new Color(197, 83, 79, 255);
+            Color color = Color.BLACK;
             trail1.color = color;
 
             pframe.addDrawable(trail1); // add the trail to the plot frame
             trail1.addPoint(xLeft, poly.evaluateWith(xLeft));
             trail1.addPoint(xRight, poly.evaluateWith(xRight));
             //Closes off the top by drawing the polynomial
+            */
 
             Trail trail2 = new Trail();
 
             trail2.color = Color.BLACK;
 
             pframe.addDrawable(trail2); // add the trail to the plot frame
-            //The trail is a open, three-sided shape with points at each corner of the trapezoid and an open top
+            //The trail is a trapezoid
             trail2.addPoint(xLeft, poly.evaluateWith(xLeft));
             trail2.addPoint(xLeft, 0);
             trail2.addPoint(xRight, 0);
             trail2.addPoint(xRight, poly.evaluateWith(xRight));
+            trail2.addPoint(xLeft, poly.evaluateWith(xLeft));
         }
     }
 
@@ -70,12 +73,12 @@ public class TrapezoidRule extends AbstractRiemann{
         tr.sumplot(pframe, poly, xLeft, xRight, subintervals);
         tr.accumulatePlot(pframe, poly, xLeft, xRight, subintervals);
         tr.accumulateIntegralPlot(pframe, poly, xLeft, xRight, subintervals);
-        tr.plotgraph(pframe, poly, xLeft, xRight, subintervals);
+        tr.plotgraph(pframe, poly, xLeft, xRight, 5*subintervals);
 
         System.out.println("The area by Trapezoid Rule is: " + tr.sum(poly, xLeft, xRight, subintervals));
     }
 
-    public void totalplot2(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals, int type){
+    public void totalplot2(Polynomial poly, double xLeft, double xRight, int subintervals, int type){
         System.out.println("Invalid Usage");
     }
 }

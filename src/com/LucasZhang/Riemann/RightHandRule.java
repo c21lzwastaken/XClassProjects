@@ -59,12 +59,12 @@ public class RightHandRule extends AbstractRiemann{
         rh.sumplot(pframe, poly, xLeft, xRight, subintervals);
         rh.accumulatePlot(pframe, poly, xLeft, xRight, subintervals);
         rh.accumulateIntegralPlot(pframe, poly, xLeft, xRight, subintervals);
-        rh.plotgraph(pframe, poly, xLeft, xRight, subintervals);
+        rh.plotgraph(pframe, poly, xLeft, xRight, 5*subintervals);
 
         System.out.println("The area by Right Hand Rule is: " + rh.sum(poly, xLeft, xRight, subintervals));
     }
 
-    public void totalplot2(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals, int type){
+    public void totalplot2(Polynomial poly, double xLeft, double xRight, int subintervals, int type){
         System.out.println("Invalid Usage");
     }
 }
