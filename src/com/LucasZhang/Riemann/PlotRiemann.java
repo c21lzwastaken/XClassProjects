@@ -27,7 +27,7 @@ public class PlotRiemann extends AbstractRiemann{
      * @param type The type of rule
      */
     public void totalplot2(Polynomial poly, double xLeft, double xRight, int subintervals, int type) {
-        //Each type between one and three maps to a particular Riemann Sum method
+        //Each type between one and four maps to a particular Riemann Sum thing
         //Creates a pframe to use
         PlotFrame pframe = new PlotFrame("x", "y", "Riemann App");
         pframe.setSize(800, 800);
@@ -63,6 +63,14 @@ public class PlotRiemann extends AbstractRiemann{
             tr.plotgraph(pframe, poly, xLeft, xRight, 5*subintervals);
 
             System.out.println("The area by Trapezoid Rule is: " + tr.sum(poly, xLeft, xRight, subintervals));
+        }
+        else if (type == 4){
+            ArcLength al = new ArcLength();
+            al.sumplot(pframe, poly, xLeft, xRight, subintervals);
+            al.accumulatePlot(pframe, poly, xLeft, xRight, subintervals);
+            al.plotgraph(pframe, poly, xLeft, xRight, 5*subintervals);
+
+            System.out.println("The total Arc Length is: " + al.sum(poly, xLeft, xRight, subintervals));
         }
 
         else {
