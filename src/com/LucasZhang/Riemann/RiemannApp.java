@@ -18,7 +18,7 @@ public class RiemannApp {
 
         PlotFrame pf = new PlotFrame("x", "y", "Riemann App");
         pf.setSize(800, 800);
-        pf.setPreferredMinMax(0, 30, 0, 100);
+        pf.setPreferredMinMax(0, 10, 0, 100);
         pf.setDefaultCloseOperation(3);
         pf.setVisible(true);
 
@@ -31,8 +31,8 @@ public class RiemannApp {
 
         //pr.totalplot2(hx, -10, 10, 20, 1);
 
-        al.sumplot(pf, hx, 0, 30, 60);
-        al.sumplot(pf, fx, 0, 30, 60);
+        //al.sumplot(pf, hx, 0, 30, 60);
+        //al.sumplot(pf, fx, 0, 30, 60);
         //al.totalplot(pf, hx, 0, 10, 20);
 
         //pr.totalplot2(pf, hx, -10, 10, 40, 1);
