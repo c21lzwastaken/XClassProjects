@@ -1,1 +1,1 @@
-# XClass
+# Lucas Zhang's CompSciX Project
