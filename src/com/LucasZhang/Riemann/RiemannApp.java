@@ -33,7 +33,7 @@ public class RiemannApp {
 
         //al.sumplot(pf, hx, 0, 30, 60);
         //al.sumplot(pf, fx, 0, 30, 60);
-        //al.totalplot(pf, hx, 0, 10, 20);
+        al.totalplot(pf, hx, 0, 10, 20);
 
         //pr.totalplot2(pf, hx, -10, 10, 40, 1);
         //pr.totalplot2(pf, fx, 0, 10, 120, 1);

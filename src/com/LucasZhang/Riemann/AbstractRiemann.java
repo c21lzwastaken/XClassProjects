@@ -166,7 +166,6 @@ public abstract class AbstractRiemann {
 
     /**
      * Plots all the separate functions using a given rule
-     * @param pframe
      * @param poly The polynomial
      * @param xLeft Leftmost point
      * @param xRight Rightmost point
