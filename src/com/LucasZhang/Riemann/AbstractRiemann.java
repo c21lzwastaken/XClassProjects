@@ -93,7 +93,10 @@ public abstract class AbstractRiemann {
     public void accumulatePlot(PlotFrame pframe, Polynomial poly, double xLeft, double xRight, int subintervals){
         if (subintervals > 0 && xRight > xLeft) {
             for (int i = 0; i < subintervals; i++) {
-                DrawableShape rect = DrawableShape.createRectangle(xLeft + (i + .5) * calculateDeltax(xLeft, xRight, subintervals), .5 * sum(poly, xLeft, xLeft + (i + 1) * calculateDeltax(xLeft, xRight, subintervals), i+1), calculateDeltax(xLeft, xRight, subintervals), Math.abs(sum(poly, xLeft, xLeft + (i + 1) * calculateDeltax(xLeft, xRight, subintervals), i+1)));
+                DrawableShape rect = DrawableShape.createRectangle(xLeft + (i + .5) * calculateDeltax(xLeft, xRight, subintervals),
+                        .5 * sum(poly, xLeft, xLeft + (i + 1) * calculateDeltax(xLeft, xRight, subintervals), i+1),
+                        calculateDeltax(xLeft, xRight, subintervals),
+                        Math.abs(sum(poly, xLeft, xLeft + (i + 1) * calculateDeltax(xLeft, xRight, subintervals), i+1)));
                 //Repeatedly creates rectangles with centers halfway along the height and subinterval
 
                 Color color = new Color(53, 146, 196, 150);

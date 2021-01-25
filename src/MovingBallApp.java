@@ -73,8 +73,7 @@ public class MovingBallApp extends AbstractSimulation {
      */
     @Override
     public void stop(){
-        System.out.println(totalTime/10 + " secs to travel "
-                + Math.abs(control.getDouble("Starting Y position") - circle.getY())+ " meters.");
+        System.out.println(totalTime/10 + " secs to travel " + Math.abs(control.getDouble("Starting Y position") - circle.getY())+ " meters.");
     }
 
     /**
