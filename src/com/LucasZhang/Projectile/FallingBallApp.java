@@ -23,14 +23,15 @@ public class FallingBallApp extends AbstractSimulation {
     double mass;
     double radius;
     double density;
+    double startingX = 0;
 
     PlotFrame velocity = new PlotFrame("Time", "Velocity", "Velocity");
 
     @Override
     public void reset() {
-        control.setValue("Starting height", 100);
+        control.setValue("Starting Height", 100);
 
-        control.setValue("Starting Velocity", 10);
+        control.setValue("Starting Velocity", 0);
 
         control.setValue("Drag Coefficient", 0.02);
 
@@ -42,12 +43,10 @@ public class FallingBallApp extends AbstractSimulation {
 
     @Override
     public void initialize() {
-        double startingY = control.getDouble("Starting Y position");
-        circle.setXY(0, startingY);
+        circle.setXY(startingX, control.getDouble("Starting Height"));
+        startingX = startingX + 5; //Shifts the falling ball over by 5 every new iteration to make it easier to see
 
-        double startingV = control.getDouble("Starting Velocity");
-
-        yVelocity = startingV;
+        yVelocity = control.getDouble("Starting Velocity");
 
         circle.color = new Color(168, 105, 118, 255);
         circle.pixRadius = 2;
@@ -55,16 +54,17 @@ public class FallingBallApp extends AbstractSimulation {
         motion.addDrawable(circle);
 
         motion.setSize(800, 800);
-        motion.setPreferredMinMax(0, 50, 0 , 150);
+        motion.setPreferredMinMax(-20, 20, 0 , 150);
         motion.setDefaultCloseOperation(3);
         motion.setVisible(true);
 
         velocity.setSize(400, 400);
-        velocity.setPreferredMinMax(0, 100, 0 , 50);
+        velocity.setPreferredMinMax(0, 5, 0 , 50);
         velocity.setDefaultCloseOperation(3);
         velocity.setVisible(true);
 
         totalTime = 0;
+
         resCoef = control.getDouble("Drag Coefficient");
         grav = control.getDouble("Gravity");
         mass = control.getDouble("Mass");
@@ -86,12 +86,16 @@ public class FallingBallApp extends AbstractSimulation {
 
             circle.setY(circle.getY() + yVelocity/10); //movement
 
-            trail.addPoint(0, circle.getY()); //draw dot
-            vtrail.addPoint(totalTime, yVelocity);
+            trail.addPoint(circle.getX(), circle.getY()); //draw dot
+            vtrail.addPoint(totalTime, -yVelocity); //draw velocity
 
-            yVelocity = yVelocity - (grav/10 + (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2)); //acceleration
-
-            totalTime = totalTime + 1/10;
+            if (yVelocity - grav/10 <= 0){
+                yVelocity = yVelocity - (grav/10) + (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
+            }
+            else{
+                yVelocity = yVelocity - (grav/10) - (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
+            }
+            totalTime = totalTime + .1;
         }
     }
 
