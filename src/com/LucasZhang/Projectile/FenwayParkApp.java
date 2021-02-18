@@ -9,8 +9,8 @@ import org.opensourcephysics.display.Trail;
 import java.awt.*;
 import java.lang.Math;
 
-public class ProjectileApp extends AbstractSimulation {
-    PlotFrame plotFrame = new PlotFrame("x", "y", "Projectile Motion");
+public class FenwayParkApp extends AbstractSimulation {
+    PlotFrame plotFrame = new PlotFrame("x", "y", "Baseball Motion");
     Circle circle = new Circle();
 
     double totalTime;
@@ -19,11 +19,9 @@ public class ProjectileApp extends AbstractSimulation {
     double yVelocity;
 
     double resCoef;
+    double resDeg;
 
     double grav;
-    double mass;
-    double radius;
-    double density;
 
     @Override
     public void reset() {
@@ -33,12 +31,10 @@ public class ProjectileApp extends AbstractSimulation {
         control.setValue("Starting Velocity", 10);
         control.setValue("Starting Angle", 45);
 
-        control.setValue("Drag Coefficient", 0.02);
+        control.setValue("Air Resistance Coefficient", 0);
+        control.setValue("Air Resistance Degree", 0);
 
         control.setValue("Gravity", 10);
-        control.setValue("Mass", 1);
-        control.setValue("Radius", 1);
-        control.setValue("Density", 1.225);
     }
 
     @Override
@@ -66,11 +62,9 @@ public class ProjectileApp extends AbstractSimulation {
         plotFrame.setVisible(true);
 
         totalTime = 0;
-        resCoef = control.getDouble("Drag Coefficient");
+        resCoef = control.getDouble("Air Resistance Coefficient");
+        resDeg = control.getDouble("Air Resistance Degree");
         grav = control.getDouble("Gravity");
-        mass = control.getDouble("Mass");
-        radius = control.getDouble("Radius");
-        density = control.getDouble("Density");
     }
 
     public void doStep() {
@@ -86,8 +80,8 @@ public class ProjectileApp extends AbstractSimulation {
 
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
-            yVelocity = yVelocity - (grav/10 + (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2)); //acceleration
-            xVelocity = xVelocity - (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(xVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
+            yVelocity = yVelocity - (grav/10 + (resCoef/10) * Math.pow(yVelocity, resDeg)); //acceleration
+            xVelocity = xVelocity - (resCoef/10) * Math.pow(xVelocity, resDeg); //acceleration
 
             totalTime++;
         }
@@ -99,6 +93,6 @@ public class ProjectileApp extends AbstractSimulation {
         System.out.println(circle.getX() + " units traveled");
     }
 
-    public static void main(String[] args) {SimulationControl.createApp(new ProjectileApp());
+    public static void main(String[] args) {SimulationControl.createApp(new FenwayParkApp());
     }
 }

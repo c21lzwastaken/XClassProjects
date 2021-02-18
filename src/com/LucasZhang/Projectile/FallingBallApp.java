@@ -9,13 +9,12 @@ import org.opensourcephysics.display.Trail;
 import java.awt.*;
 import java.lang.Math;
 
-public class ProjectileApp extends AbstractSimulation {
-    PlotFrame plotFrame = new PlotFrame("x", "y", "Projectile Motion");
+public class FallingBallApp extends AbstractSimulation {
+    PlotFrame motion = new PlotFrame("x", "y", "Projectile Motion");
     Circle circle = new Circle();
 
     double totalTime;
 
-    double xVelocity;
     double yVelocity;
 
     double resCoef;
@@ -25,13 +24,13 @@ public class ProjectileApp extends AbstractSimulation {
     double radius;
     double density;
 
+    PlotFrame velocity = new PlotFrame("Time", "Velocity", "Velocity");
+
     @Override
     public void reset() {
-        control.setValue("Starting Y position", 100);
-        control.setValue("Starting X position", 0);
+        control.setValue("Starting height", 100);
 
         control.setValue("Starting Velocity", 10);
-        control.setValue("Starting Angle", 45);
 
         control.setValue("Drag Coefficient", 0.02);
 
@@ -44,26 +43,26 @@ public class ProjectileApp extends AbstractSimulation {
     @Override
     public void initialize() {
         double startingY = control.getDouble("Starting Y position");
-        double startingX = control.getDouble("Starting X position");
-        circle.setXY(startingX, startingY);
+        circle.setXY(0, startingY);
 
         double startingV = control.getDouble("Starting Velocity");
-        double startingA = control.getDouble("Starting Angle");
-        double newA = Math.toRadians(startingA);
 
-        xVelocity = startingV * Math.cos(newA);
-        yVelocity = startingV * Math.sin(newA);
-
+        yVelocity = startingV;
 
         circle.color = new Color(168, 105, 118, 255);
         circle.pixRadius = 2;
 
-        plotFrame.addDrawable(circle);
+        motion.addDrawable(circle);
 
-        plotFrame.setSize(800, 800);
-        plotFrame.setPreferredMinMax(0, 50, 0 , 150);
-        plotFrame.setDefaultCloseOperation(3);
-        plotFrame.setVisible(true);
+        motion.setSize(800, 800);
+        motion.setPreferredMinMax(0, 50, 0 , 150);
+        motion.setDefaultCloseOperation(3);
+        motion.setVisible(true);
+
+        velocity.setSize(400, 400);
+        velocity.setPreferredMinMax(0, 100, 0 , 50);
+        velocity.setDefaultCloseOperation(3);
+        velocity.setVisible(true);
 
         totalTime = 0;
         resCoef = control.getDouble("Drag Coefficient");
@@ -75,30 +74,32 @@ public class ProjectileApp extends AbstractSimulation {
 
     public void doStep() {
         Trail trail = new Trail();
+        Trail vtrail = new Trail();
 
         trail.color = new Color(44, 44, 44, 255);
-        plotFrame.addDrawable(trail);
+        vtrail.color = new Color(44, 44, 44, 255);
+
+        motion.addDrawable(trail);
+        velocity.addDrawable(vtrail);
 
         if (circle.getY() >= 0){ //stops when it hits the ground
 
             circle.setY(circle.getY() + yVelocity/10); //movement
-            circle.setX(circle.getX() + xVelocity/10); //movement
 
-            trail.addPoint(circle.getX(), circle.getY()); //draw dot
+            trail.addPoint(0, circle.getY()); //draw dot
+            vtrail.addPoint(totalTime, yVelocity);
 
             yVelocity = yVelocity - (grav/10 + (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2)); //acceleration
-            xVelocity = xVelocity - (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(xVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
 
-            totalTime++;
+            totalTime = totalTime + 1/10;
         }
     }
 
     @Override
     public void stop(){
-        System.out.println(totalTime/10 + " secs to travel");
-        System.out.println(circle.getX() + " units traveled");
+        System.out.println(totalTime + " secs to travel");
     }
 
-    public static void main(String[] args) {SimulationControl.createApp(new ProjectileApp());
+    public static void main(String[] args) {SimulationControl.createApp(new FallingBallApp());
     }
 }
