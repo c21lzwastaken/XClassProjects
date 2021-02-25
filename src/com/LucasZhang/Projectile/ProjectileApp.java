@@ -87,12 +87,12 @@ public class ProjectileApp extends AbstractSimulation {
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
             if (yVelocity - grav/10 <= 0){
-                yVelocity = yVelocity - (grav/10) + (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
+                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
             }
             else{
-                yVelocity = yVelocity - (grav/10) - (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
+                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
             }
-            xVelocity = xVelocity - (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(xVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
+            xVelocity = xVelocity - (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
 
             totalTime++;
         }

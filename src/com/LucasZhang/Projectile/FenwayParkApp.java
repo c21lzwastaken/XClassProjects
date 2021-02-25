@@ -3,6 +3,7 @@ package com.LucasZhang.Projectile;
 import org.opensourcephysics.controls.AbstractSimulation;
 import org.opensourcephysics.controls.SimulationControl;
 import org.opensourcephysics.display.Circle;
+import org.opensourcephysics.display.DrawableShape;
 import org.opensourcephysics.frames.PlotFrame;
 import org.opensourcephysics.display.Trail;
 
@@ -12,6 +13,7 @@ import java.lang.Math;
 public class FenwayParkApp extends AbstractSimulation {
     PlotFrame plotFrame = new PlotFrame("x", "y", "Baseball Motion");
     Circle circle = new Circle();
+    DrawableShape wall = DrawableShape.createRectangle(95, 5.665, 1, 11.33);
 
     double totalTime;
 
@@ -19,28 +21,22 @@ public class FenwayParkApp extends AbstractSimulation {
     double yVelocity;
 
     double resCoef;
-    double resDeg;
 
     double grav;
+    double mass;
+    double radius;
+    double density;
 
     @Override
     public void reset() {
-        control.setValue("Starting Y position", 100);
-        control.setValue("Starting X position", 0);
-
         control.setValue("Starting Velocity", 10);
         control.setValue("Starting Angle", 45);
-
-        control.setValue("Air Resistance Coefficient", 0);
-        control.setValue("Air Resistance Degree", 0);
-
-        control.setValue("Gravity", 10);
     }
 
     @Override
     public void initialize() {
-        double startingY = control.getDouble("Starting Y position");
-        double startingX = control.getDouble("Starting X position");
+        double startingY = 1;
+        double startingX = 0;
         circle.setXY(startingX, startingY);
 
         double startingV = control.getDouble("Starting Velocity");
@@ -50,21 +46,25 @@ public class FenwayParkApp extends AbstractSimulation {
         xVelocity = startingV * Math.cos(newA);
         yVelocity = startingV * Math.sin(newA);
 
-
         circle.color = new Color(168, 105, 118, 255);
-        circle.pixRadius = 2;
-
+        circle.pixRadius = 3;
         plotFrame.addDrawable(circle);
 
+        wall.edgeColor = new Color(69, 152, 80, 255);
+        wall.color = new Color(69, 152, 80, 255);
+        plotFrame.addDrawable(wall);
+
         plotFrame.setSize(800, 800);
-        plotFrame.setPreferredMinMax(0, 50, 0 , 150);
+        plotFrame.setPreferredMinMax(0, 100, 0 , 50);
         plotFrame.setDefaultCloseOperation(3);
         plotFrame.setVisible(true);
 
         totalTime = 0;
-        resCoef = control.getDouble("Air Resistance Coefficient");
-        resDeg = control.getDouble("Air Resistance Degree");
-        grav = control.getDouble("Gravity");
+        resCoef = .02;
+        grav = 9.8;
+        mass = .145;
+        radius = .0365;
+        density = 1.225;
     }
 
     public void doStep() {
@@ -73,6 +73,13 @@ public class FenwayParkApp extends AbstractSimulation {
         trail.color = new Color(44, 44, 44, 255);
         plotFrame.addDrawable(trail);
 
+        if (circle.getX() <= 94.5 && circle.getX() + xVelocity/10 >= 94.5 && (yVelocity/xVelocity)*(94.5-circle.getX())+circle.getY() <= 11.33){ //If the line between the two points crossses through the front edge of the wall
+            circle.setY((yVelocity/xVelocity)*(94.5-circle.getX())+circle.getY());
+            circle.setX(94.4);
+            yVelocity = .15 * yVelocity;
+            xVelocity = -.15 * Math.abs(xVelocity);
+        }
+
         if (circle.getY() >= 0){ //stops when it hits the ground
 
             circle.setY(circle.getY() + yVelocity/10); //movement
@@ -80,8 +87,18 @@ public class FenwayParkApp extends AbstractSimulation {
 
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
-            yVelocity = yVelocity - (grav/10 + (resCoef/10) * Math.pow(yVelocity, resDeg)); //acceleration
-            xVelocity = xVelocity - (resCoef/10) * Math.pow(xVelocity, resDeg); //acceleration
+            if (yVelocity - grav/10 <= 0){
+                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+            }
+            else{
+                yVelocity = yVelocity - (grav/10) - (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+            }
+            if (xVelocity >= 0){
+                xVelocity = xVelocity - (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+            }
+            else{
+                xVelocity = xVelocity + (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+            }
 
             totalTime++;
         }
@@ -90,7 +107,6 @@ public class FenwayParkApp extends AbstractSimulation {
     @Override
     public void stop(){
         System.out.println(totalTime/10 + " secs to travel");
-        System.out.println(circle.getX() + " units traveled");
     }
 
     public static void main(String[] args) {SimulationControl.createApp(new FenwayParkApp());

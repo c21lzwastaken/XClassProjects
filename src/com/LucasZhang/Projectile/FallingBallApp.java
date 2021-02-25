@@ -90,10 +90,10 @@ public class FallingBallApp extends AbstractSimulation {
             vtrail.addPoint(totalTime, -yVelocity); //draw velocity
 
             if (yVelocity - grav/10 <= 0){
-                yVelocity = yVelocity - (grav/10) + (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
+                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
             }
             else{
-                yVelocity = yVelocity - (grav/10) - (resCoef * density / (2*Math.pow(mass, 2)) ) * Math.pow(yVelocity, 2)/10 * Math.PI * Math.pow(radius, 2); //acceleration
+                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
             }
             totalTime = totalTime + .1;
         }
