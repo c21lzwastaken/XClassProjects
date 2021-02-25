@@ -109,6 +109,7 @@ public class FenwayParkApp extends AbstractSimulation {
         System.out.println(totalTime/10 + " secs to travel");
     }
 
-    public static void main(String[] args) {SimulationControl.createApp(new FenwayParkApp());
+    public static void main(String[] args) {
+        SimulationControl.createApp(new FenwayParkApp());
     }
 }

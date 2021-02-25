@@ -104,6 +104,7 @@ public class ProjectileApp extends AbstractSimulation {
         System.out.println(circle.getX() + " units traveled");
     }
 
-    public static void main(String[] args) {SimulationControl.createApp(new ProjectileApp());
+    public static void main(String[] args) {
+        SimulationControl.createApp(new ProjectileApp());
     }
 }

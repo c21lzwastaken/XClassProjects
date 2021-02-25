@@ -104,6 +104,7 @@ public class FallingBallApp extends AbstractSimulation {
         System.out.println(totalTime + " secs to travel");
     }
 
-    public static void main(String[] args) {SimulationControl.createApp(new FallingBallApp());
+    public static void main(String[] args) {
+        SimulationControl.createApp(new FallingBallApp());
     }
 }
