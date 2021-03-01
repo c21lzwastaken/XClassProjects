@@ -35,7 +35,7 @@ public class FallingBallApp extends AbstractSimulation {
 
         control.setValue("Drag Coefficient", 0.02);
 
-        control.setValue("Gravity", 10);
+        control.setValue("Gravity", 9.8);
         control.setValue("Mass", 1);
         control.setValue("Radius", 1);
         control.setValue("Density", 1.225);
@@ -59,7 +59,7 @@ public class FallingBallApp extends AbstractSimulation {
         motion.setVisible(true);
 
         velocity.setSize(400, 400);
-        velocity.setPreferredMinMax(0, 5, 0 , 50);
+        velocity.setPreferredMinMax(0, 10, -50 , 10);
         velocity.setDefaultCloseOperation(3);
         velocity.setVisible(true);
 
@@ -82,26 +82,26 @@ public class FallingBallApp extends AbstractSimulation {
         motion.addDrawable(trail);
         velocity.addDrawable(vtrail);
 
-        if (circle.getY() >= 0){ //stops when it hits the ground
+        if (circle.getY() > 0){ //stops when it hits the ground
 
             circle.setY(circle.getY() + yVelocity/10); //movement
 
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
-            vtrail.addPoint(totalTime, -yVelocity); //draw velocity
+            vtrail.addPoint(totalTime/10, yVelocity); //draw velocity
 
             if (yVelocity - grav/10 <= 0){
                 yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
             }
             else{
-                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+                yVelocity = yVelocity - (grav/10) - (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
             }
-            totalTime = totalTime + .1;
+            totalTime++;
+            velocity.setMessage(totalTime/10 + " Seconds");
         }
     }
 
     @Override
     public void stop(){
-        System.out.println(totalTime + " secs to travel");
     }
 
     public static void main(String[] args) {

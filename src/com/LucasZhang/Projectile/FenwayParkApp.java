@@ -13,7 +13,7 @@ import java.lang.Math;
 public class FenwayParkApp extends AbstractSimulation {
     PlotFrame plotFrame = new PlotFrame("x", "y", "Baseball Motion");
     Circle circle = new Circle();
-    DrawableShape wall = DrawableShape.createRectangle(95, 5.665, 1, 11.33);
+    DrawableShape wall = DrawableShape.createRectangle(94.75, 5.665, .5, 11.33); //The wall
 
     double totalTime;
 
@@ -27,6 +27,9 @@ public class FenwayParkApp extends AbstractSimulation {
     double radius;
     double density;
 
+    boolean pass;
+    boolean fall;
+
     @Override
     public void reset() {
         control.setValue("Starting Velocity", 10);
@@ -35,7 +38,7 @@ public class FenwayParkApp extends AbstractSimulation {
 
     @Override
     public void initialize() {
-        double startingY = 1;
+        double startingY = 1; //starting position is hardcoded
         double startingX = 0;
         circle.setXY(startingX, startingY);
 
@@ -60,11 +63,14 @@ public class FenwayParkApp extends AbstractSimulation {
         plotFrame.setVisible(true);
 
         totalTime = 0;
-        resCoef = .02;
+        resCoef = .02; //Drag factors are hardcoded
         grav = 9.8;
         mass = .145;
         radius = .0365;
         density = 1.225;
+
+        pass = false;
+        fall = false;
     }
 
     public void doStep() {
@@ -73,21 +79,38 @@ public class FenwayParkApp extends AbstractSimulation {
         trail.color = new Color(44, 44, 44, 255);
         plotFrame.addDrawable(trail);
 
+        if (circle.getX() >= 94.5 && pass == false) { //If the ball passes the wall
+            control.println("Ball cleared wall");
+            pass = true;
+        }
+
+        if (circle.getY() <= 0 && circle.getX() <= 94.5 && xVelocity > 0 && fall == false){
+            control.println("Ball fell short of wall");
+            control.println("Total distance traveled: " + circle.getX());
+            fall = true;
+        }
+        if (circle.getY() <= 0 && circle.getX() >= 94.5 && xVelocity > 0 && fall == false){
+            control.println("Total distance traveled: " + circle.getX());
+            fall = true;
+        }
+
         if (circle.getX() <= 94.5 && circle.getX() + xVelocity/10 >= 94.5 && (yVelocity/xVelocity)*(94.5-circle.getX())+circle.getY() <= 11.33){ //If the line between the two points crossses through the front edge of the wall
             circle.setY((yVelocity/xVelocity)*(94.5-circle.getX())+circle.getY());
             circle.setX(94.4);
+            trail.addPoint(circle.getX(), circle.getY());
             yVelocity = .15 * yVelocity;
             xVelocity = -.15 * Math.abs(xVelocity);
+            control.println("Ball bounced off wall");
         }
 
-        if (circle.getY() >= 0){ //stops when it hits the ground
+        if (circle.getY() > 0){ //stops when it hits the ground
 
             circle.setY(circle.getY() + yVelocity/10); //movement
             circle.setX(circle.getX() + xVelocity/10); //movement
 
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
-            if (yVelocity - grav/10 <= 0){
+            if (yVelocity - grav <= 0){
                 yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
             }
             else{
@@ -101,12 +124,12 @@ public class FenwayParkApp extends AbstractSimulation {
             }
 
             totalTime++;
+            plotFrame.setMessage(totalTime/10 + " Seconds");
         }
     }
 
     @Override
     public void stop(){
-        System.out.println(totalTime/10 + " secs to travel");
     }
 
     public static void main(String[] args) {

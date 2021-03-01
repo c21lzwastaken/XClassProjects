@@ -18,12 +18,22 @@ public class ProjectileApp extends AbstractSimulation {
     double xVelocity;
     double yVelocity;
 
+    double xchange;
+    double ychange;
+    double falsex;
+    double falsey;
+
     double resCoef;
 
     double grav;
     double mass;
     double radius;
     double density;
+
+    double ydrag;
+    double xdrag;
+
+    boolean fall;
 
     @Override
     public void reset() {
@@ -35,7 +45,7 @@ public class ProjectileApp extends AbstractSimulation {
 
         control.setValue("Drag Coefficient", 0.02);
 
-        control.setValue("Gravity", 10);
+        control.setValue("Gravity", 9.8);
         control.setValue("Mass", 1);
         control.setValue("Radius", 1);
         control.setValue("Density", 1.225);
@@ -53,7 +63,10 @@ public class ProjectileApp extends AbstractSimulation {
 
         xVelocity = startingV * Math.cos(newA);
         yVelocity = startingV * Math.sin(newA);
-
+        xchange = 0;
+        ychange = 0;
+        falsex = 0;
+        falsey = 0;
 
         circle.color = new Color(168, 105, 118, 255);
         circle.pixRadius = 2;
@@ -71,6 +84,11 @@ public class ProjectileApp extends AbstractSimulation {
         mass = control.getDouble("Mass");
         radius = control.getDouble("Radius");
         density = control.getDouble("Density");
+
+        xdrag = 0;
+        ydrag = 0;
+
+        fall = false;
     }
 
     public void doStep() {
@@ -79,29 +97,48 @@ public class ProjectileApp extends AbstractSimulation {
         trail.color = new Color(44, 44, 44, 255);
         plotFrame.addDrawable(trail);
 
-        if (circle.getY() >= 0){ //stops when it hits the ground
+        if (circle.getY() <= 0 && fall == false){
+            control.println("Total distance traveled: " + circle.getX());
+            fall = true;
+        }
 
-            circle.setY(circle.getY() + yVelocity/10); //movement
-            circle.setX(circle.getX() + xVelocity/10); //movement
+        if (circle.getY() > 0){ //stops when it hits the ground
 
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
-            if (yVelocity - grav/10 <= 0){
-                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+            ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass);
+            xdrag = (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass);
+
+            if (falsey - grav/10 <= 0){ //when the object is falling
+                ychange = -(grav/10) + ydrag;
+
+                falsey = yVelocity + ychange/2;
+
+                yVelocity = yVelocity + ychange; //true acceleration
             }
             else{
-                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+                ychange = -(grav/10) - ydrag;
+
+                falsey = yVelocity + ychange/2;
+
+                yVelocity = yVelocity + ychange; //true acceleration
             }
-            xVelocity = xVelocity - (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+            xchange = -xdrag;
+
+            falsex = xVelocity + xchange/2;
+
+            xVelocity = xVelocity + xchange; //true acceleration
+
+            circle.setY(circle.getY() + falsey/10); //movement
+            circle.setX(circle.getX() + falsex/10); //movement
 
             totalTime++;
+            plotFrame.setMessage(totalTime/10 + " Seconds");
         }
     }
 
     @Override
     public void stop(){
-        System.out.println(totalTime/10 + " secs to travel");
-        System.out.println(circle.getX() + " units traveled");
     }
 
     public static void main(String[] args) {
