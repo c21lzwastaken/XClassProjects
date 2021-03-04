@@ -20,6 +20,9 @@ public class FenwayParkApp extends AbstractSimulation {
     double xVelocity;
     double yVelocity;
 
+    double falsex;
+    double falsey;
+
     double resCoef;
 
     double grav;
@@ -30,10 +33,19 @@ public class FenwayParkApp extends AbstractSimulation {
     boolean pass;
     boolean fall;
 
+    double time;
+
     @Override
     public void reset() {
         control.setValue("Starting Velocity", 10);
         control.setValue("Starting Angle", 45);
+
+        control.setValue("Time Increment", .1);
+
+        control.setValue("X Maximum", 100);
+        control.setValue("X Minimum", 0);
+        control.setValue("Y Maximum", 50);
+        control.setValue("Y Minimum", 0);
     }
 
     @Override
@@ -42,12 +54,16 @@ public class FenwayParkApp extends AbstractSimulation {
         double startingX = 0;
         circle.setXY(startingX, startingY);
 
+        time = control.getDouble("Time Increment");
+
         double startingV = control.getDouble("Starting Velocity");
         double startingA = control.getDouble("Starting Angle");
         double newA = Math.toRadians(startingA);
 
         xVelocity = startingV * Math.cos(newA);
         yVelocity = startingV * Math.sin(newA);
+        falsex = xVelocity;
+        falsey = yVelocity;
 
         circle.color = new Color(168, 105, 118, 255);
         circle.pixRadius = 3;
@@ -58,7 +74,7 @@ public class FenwayParkApp extends AbstractSimulation {
         plotFrame.addDrawable(wall);
 
         plotFrame.setSize(800, 800);
-        plotFrame.setPreferredMinMax(0, 100, 0 , 50);
+        plotFrame.setPreferredMinMax(control.getDouble("X Minimum"), control.getDouble("X Maximum"), control.getDouble("Y Minimum") , control.getDouble("Y Maximum"));
         plotFrame.setDefaultCloseOperation(3);
         plotFrame.setVisible(true);
 
@@ -79,17 +95,17 @@ public class FenwayParkApp extends AbstractSimulation {
         trail.color = new Color(44, 44, 44, 255);
         plotFrame.addDrawable(trail);
 
-        if (circle.getX() >= 94.5 && pass == false) { //If the ball passes the wall
+        if (circle.getX() >= 94.5 && !pass) { //If the ball passes the wall
             control.println("Ball cleared wall");
             pass = true;
         }
 
-        if (circle.getY() <= 0 && circle.getX() <= 94.5 && xVelocity > 0 && fall == false){
+        if (circle.getY() <= 0 && circle.getX() <= 94.5 && xVelocity > 0 && !fall){
             control.println("Ball fell short of wall");
             control.println("Total distance traveled: " + circle.getX());
             fall = true;
         }
-        if (circle.getY() <= 0 && circle.getX() >= 94.5 && xVelocity > 0 && fall == false){
+        if (circle.getY() <= 0 && circle.getX() >= 94.5 && xVelocity > 0 && !fall){
             control.println("Total distance traveled: " + circle.getX());
             fall = true;
         }
@@ -101,30 +117,48 @@ public class FenwayParkApp extends AbstractSimulation {
             yVelocity = .15 * yVelocity;
             xVelocity = -.15 * Math.abs(xVelocity);
             control.println("Ball bounced off wall");
+            totalTime++;
         }
 
         if (circle.getY() > 0){ //stops when it hits the ground
 
-            circle.setY(circle.getY() + yVelocity/10); //movement
-            circle.setX(circle.getX() + xVelocity/10); //movement
-
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
-            if (yVelocity - grav <= 0){
-                yVelocity = yVelocity - (grav/10) + (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+            double ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
+            double xdrag = (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
+
+            if (falsey - grav*time <= 0){ //when the object is falling downwards
+                double ychange = -(grav*time) + ydrag;
+                falsey = yVelocity + ychange/2;
+                yVelocity = yVelocity + ychange; //true acceleration
             }
             else{
-                yVelocity = yVelocity - (grav/10) - (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+                double ychange = -(grav*time) - ydrag;
+                falsey = yVelocity + ychange/2;
+                yVelocity = yVelocity + ychange; //true acceleration
             }
-            if (xVelocity >= 0){
-                xVelocity = xVelocity - (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+            if (falsex >= 0){
+                double xchange = -xdrag;
+                falsex = xVelocity + xchange/2;
+                xVelocity = xVelocity + xchange; //true acceleration
             }
             else{
-                xVelocity = xVelocity + (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass); //acceleration
+                double xchange = xdrag;
+                falsex = xVelocity + xchange/2;
+                xVelocity = xVelocity + xchange; //true acceleration
+            }
+
+            if (circle.getY() + falsey*time <=0){ //placing the ball directly on the x axis
+                circle.setX(circle.getX() - (xVelocity/yVelocity)*(circle.getY()));
+                circle.setY(0);
+            }
+            else {
+                circle.setY(circle.getY() + falsey * time); //movement
+                circle.setX(circle.getX() + falsex * time); //movement
             }
 
             totalTime++;
-            plotFrame.setMessage(totalTime/10 + " Seconds");
+            plotFrame.setMessage(totalTime*time + " Seconds");
         }
     }
 

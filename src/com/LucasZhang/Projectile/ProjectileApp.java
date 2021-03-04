@@ -18,8 +18,6 @@ public class ProjectileApp extends AbstractSimulation {
     double xVelocity;
     double yVelocity;
 
-    double xchange;
-    double ychange;
     double falsex;
     double falsey;
 
@@ -30,10 +28,9 @@ public class ProjectileApp extends AbstractSimulation {
     double radius;
     double density;
 
-    double ydrag;
-    double xdrag;
-
     boolean fall;
+
+    double time;
 
     @Override
     public void reset() {
@@ -49,6 +46,13 @@ public class ProjectileApp extends AbstractSimulation {
         control.setValue("Mass", 1);
         control.setValue("Radius", 1);
         control.setValue("Density", 1.225);
+
+        control.setValue("Time Increment", .1);
+
+        control.setValue("X Maximum", 150);
+        control.setValue("X Minimum", 0);
+        control.setValue("Y Maximum", 50);
+        control.setValue("Y Minimum", 0);
     }
 
     @Override
@@ -61,12 +65,13 @@ public class ProjectileApp extends AbstractSimulation {
         double startingA = control.getDouble("Starting Angle");
         double newA = Math.toRadians(startingA);
 
+        time = control.getDouble("Time Increment");
+
         xVelocity = startingV * Math.cos(newA);
         yVelocity = startingV * Math.sin(newA);
-        xchange = 0;
-        ychange = 0;
-        falsex = 0;
-        falsey = 0;
+
+        falsex = xVelocity;
+        falsey = yVelocity;
 
         circle.color = new Color(168, 105, 118, 255);
         circle.pixRadius = 2;
@@ -74,7 +79,7 @@ public class ProjectileApp extends AbstractSimulation {
         plotFrame.addDrawable(circle);
 
         plotFrame.setSize(800, 800);
-        plotFrame.setPreferredMinMax(0, 50, 0 , 150);
+        plotFrame.setPreferredMinMax(control.getDouble("X Minimum"), control.getDouble("X Maximum"), control.getDouble("Y Minimum") , control.getDouble("Y Maximum"));
         plotFrame.setDefaultCloseOperation(3);
         plotFrame.setVisible(true);
 
@@ -85,9 +90,6 @@ public class ProjectileApp extends AbstractSimulation {
         radius = control.getDouble("Radius");
         density = control.getDouble("Density");
 
-        xdrag = 0;
-        ydrag = 0;
-
         fall = false;
     }
 
@@ -97,7 +99,7 @@ public class ProjectileApp extends AbstractSimulation {
         trail.color = new Color(44, 44, 44, 255);
         plotFrame.addDrawable(trail);
 
-        if (circle.getY() <= 0 && fall == false){
+        if (circle.getY() <= 0 && !fall){
             control.println("Total distance traveled: " + circle.getX());
             fall = true;
         }
@@ -106,34 +108,35 @@ public class ProjectileApp extends AbstractSimulation {
 
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
-            ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass);
-            xdrag = (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(20 * mass);
+            double ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
+            double xdrag = (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
 
-            if (falsey - grav/10 <= 0){ //when the object is falling
-                ychange = -(grav/10) + ydrag;
-
+            if (falsey - grav*time <= 0){ //when the object is falling downwards
+                double ychange = -(grav*time) + ydrag;
                 falsey = yVelocity + ychange/2;
-
                 yVelocity = yVelocity + ychange; //true acceleration
             }
             else{
-                ychange = -(grav/10) - ydrag;
-
+                double ychange = -(grav*time) - ydrag;
                 falsey = yVelocity + ychange/2;
-
                 yVelocity = yVelocity + ychange; //true acceleration
             }
-            xchange = -xdrag;
-
+            double xchange = -xdrag;
             falsex = xVelocity + xchange/2;
-
             xVelocity = xVelocity + xchange; //true acceleration
 
-            circle.setY(circle.getY() + falsey/10); //movement
-            circle.setX(circle.getX() + falsex/10); //movement
+            if (circle.getY() + falsey*time <=0){ //placing the ball directly on the x axis
+                circle.setX(circle.getX() - (xVelocity/yVelocity)*(circle.getY()));
+                circle.setY(0);
+            }
+            else {
+                circle.setY(circle.getY() + falsey * time); //movement
+                circle.setX(circle.getX() + falsex * time); //movement
+            }
+
 
             totalTime++;
-            plotFrame.setMessage(totalTime/10 + " Seconds");
+            plotFrame.setMessage(totalTime*time + " Seconds");
         }
     }
 
