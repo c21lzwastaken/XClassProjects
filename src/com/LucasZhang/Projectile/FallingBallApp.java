@@ -96,7 +96,7 @@ public class FallingBallApp extends AbstractSimulation {
         motion.addDrawable(trail);
         velocity.addDrawable(vtrail);
 
-        double ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
+        double ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2) * time/(2 * mass);
 
         if (circle.getY() > 0){ //stops when it hits the ground
 

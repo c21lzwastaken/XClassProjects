@@ -100,22 +100,24 @@ public class FenwayParkApp extends AbstractSimulation {
             pass = true;
         }
 
-        if (circle.getY() <= 0 && circle.getX() <= 94.5 && xVelocity > 0 && !fall){
+        if (circle.getY() <= 0 && circle.getX() <= 94.5 && falsey > 0 && !fall){
             control.println("Ball fell short of wall");
             control.println("Total distance traveled: " + circle.getX());
             fall = true;
         }
-        if (circle.getY() <= 0 && circle.getX() >= 94.5 && xVelocity > 0 && !fall){
+        if (circle.getY() <= 0 && circle.getX() >= 94.5 && falsex > 0 && !fall){
             control.println("Total distance traveled: " + circle.getX());
             fall = true;
         }
 
-        if (circle.getX() <= 94.5 && circle.getX() + xVelocity/10 >= 94.5 && (yVelocity/xVelocity)*(94.5-circle.getX())+circle.getY() <= 11.33){ //If the line between the two points crossses through the front edge of the wall
-            circle.setY((yVelocity/xVelocity)*(94.5-circle.getX())+circle.getY());
+        if (circle.getX() <= 94.5 && circle.getX() + falsex*time >= 94.5 && (falsey/falsex)*(94.5-circle.getX())+circle.getY() <= 11.33){ //If the line between the two points crossses through the front edge of the wall
+            circle.setY((falsey/falsex)*(94.5-circle.getX())+circle.getY());
             circle.setX(94.4);
             trail.addPoint(circle.getX(), circle.getY());
             yVelocity = .15 * yVelocity;
             xVelocity = -.15 * Math.abs(xVelocity);
+            falsey=yVelocity;
+            falsex=xVelocity;
             control.println("Ball bounced off wall");
             totalTime++;
         }
@@ -124,8 +126,8 @@ public class FenwayParkApp extends AbstractSimulation {
 
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
-            double ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
-            double xdrag = (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
+            double ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2) * time/(2 * mass);
+            double xdrag = (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2) * time/(2 * mass);
 
             if (falsey - grav*time <= 0){ //when the object is falling downwards
                 double ychange = -(grav*time) + ydrag;
@@ -149,7 +151,7 @@ public class FenwayParkApp extends AbstractSimulation {
             }
 
             if (circle.getY() + falsey*time <=0){ //placing the ball directly on the x axis
-                circle.setX(circle.getX() - (xVelocity/yVelocity)*(circle.getY()));
+                circle.setX(circle.getX() - (falsex/falsey)*(circle.getY()));
                 circle.setY(0);
             }
             else {

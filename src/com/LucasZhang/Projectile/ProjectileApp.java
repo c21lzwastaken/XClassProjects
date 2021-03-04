@@ -108,8 +108,8 @@ public class ProjectileApp extends AbstractSimulation {
 
             trail.addPoint(circle.getX(), circle.getY()); //draw dot
 
-            double ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
-            double xdrag = (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2)/(2 * time * mass);
+            double ydrag = (resCoef * density) * Math.pow(yVelocity, 2) * Math.PI * Math.pow(radius, 2) * time/(2 * mass);
+            double xdrag = (resCoef * density) * Math.pow(xVelocity, 2) * Math.PI * Math.pow(radius, 2) * time/(2 * mass);
 
             if (falsey - grav*time <= 0){ //when the object is falling downwards
                 double ychange = -(grav*time) + ydrag;
@@ -126,14 +126,13 @@ public class ProjectileApp extends AbstractSimulation {
             xVelocity = xVelocity + xchange; //true acceleration
 
             if (circle.getY() + falsey*time <=0){ //placing the ball directly on the x axis
-                circle.setX(circle.getX() - (xVelocity/yVelocity)*(circle.getY()));
+                circle.setX(circle.getX() - (falsex/falsey)*(circle.getY()));
                 circle.setY(0);
             }
             else {
                 circle.setY(circle.getY() + falsey * time); //movement
                 circle.setX(circle.getX() + falsex * time); //movement
             }
-
 
             totalTime++;
             plotFrame.setMessage(totalTime*time + " Seconds");
