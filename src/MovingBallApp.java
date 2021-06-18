@@ -30,7 +30,7 @@ public class MovingBallApp extends AbstractSimulation {
     @Override
     public void reset() {
         control.setValue("Starting Y position", 100);
-        control.setValue("Starting X position", 100);
+        control.setValue("Starting X position", 0);
     }
 
     /**
@@ -51,7 +51,7 @@ public class MovingBallApp extends AbstractSimulation {
         plotFrame.addDrawable(circle);
 
         // Configure plot frame
-        plotFrame.setPreferredMinMax(-Math.abs(startingX), Math.abs(startingX), -Math.abs(startingY), Math.abs(startingY)); // Scale of graph.
+        plotFrame.setPreferredMinMax(-50, 50, -Math.abs(startingY), Math.abs(startingY)); // Scale of graph.
         plotFrame.setDefaultCloseOperation(3); // Make it so x'ing out of the graph stops the program.
         plotFrame.setVisible(true); // Required to show plot frame.
     }
